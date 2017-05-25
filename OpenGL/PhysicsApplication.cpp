@@ -90,6 +90,7 @@ bool PhysicsApplication::update()
 	}
 
 	//TODO: sleep 1000*dt
+	Sleep(1000 * dt);
 
 	return (glfwWindowShouldClose(window) == false && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS);
 }
