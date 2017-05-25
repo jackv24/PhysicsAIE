@@ -10,11 +10,12 @@ RigidBody::RigidBody()
 	m_mass = 1.0f;
 }
 
-RigidBody::RigidBody(glm::vec2 position, glm::vec2 velocity, float mass)
+RigidBody::RigidBody(glm::vec2 position, glm::vec2 velocity, float mass, float bounciness)
 {
 	m_position = position;
 	m_velocity = velocity;
 	m_mass = mass;
+	m_bounciness = bounciness;
 }
 
 RigidBody::~RigidBody()
@@ -23,11 +24,11 @@ RigidBody::~RigidBody()
 
 void RigidBody::Update(float deltaTime)
 {
-	//Apply gravity to velocity over time
-	m_velocity += gravity * deltaTime;
-
 	//Apply velocity to position
 	m_position += m_velocity * deltaTime;
+
+	//Apply gravity to velocity over time
+	m_velocity += gravity * deltaTime;
 }
 
 void RigidBody::SetPosition(glm::vec2 position) { m_position = position; }
@@ -40,5 +41,5 @@ float RigidBody::GetBounciness() { return m_bounciness; }
 
 void RigidBody::ApplyForce(glm::vec2 force)
 {
-	m_velocity += force;
+	m_velocity += force/m_mass;
 }

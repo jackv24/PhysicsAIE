@@ -6,7 +6,7 @@
 Plane::Plane(glm::vec2 p, glm::vec2 n)
 {
 	position = p;
-	normal = n;
+	normal = glm::normalize(n);
 
 	type = PLANE;
 }

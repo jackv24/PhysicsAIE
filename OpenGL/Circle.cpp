@@ -8,12 +8,13 @@ Circle::Circle()
 	type = CIRCLE;
 }
 
-Circle::Circle(glm::vec2 position, float radius, glm::vec2 velocity, float mass)
+Circle::Circle(glm::vec2 position, float radius, glm::vec2 velocity, float mass, float bounciness)
 {
 	m_position = position;
 	m_radius = radius;
 	m_velocity = velocity;
 	m_mass = mass;
+	m_bounciness = bounciness;
 
 	type = CIRCLE;
 }
