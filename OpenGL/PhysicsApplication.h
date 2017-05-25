@@ -21,6 +21,8 @@ public:
 	virtual bool update();
 	virtual void draw();
 
+	void CreateScene();
+
 	int day = 0;
 
 	Camera camera;

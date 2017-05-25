@@ -2,6 +2,7 @@
 
 #include "RigidBody.h"
 #include "Circle.h"
+#include "Plane.h"
 
 using namespace glm;
 
@@ -36,8 +37,7 @@ bool PhysicsApplication::startup()
 
 	camera.radius = 1;
 
-	//Add new physics objects to list
-	m_physicsObjects.push_back(new Circle(glm::vec2(0), 1.0f, glm::vec2(1, 0)));
+	CreateScene();
 
 	return true;
 }
@@ -52,8 +52,21 @@ void PhysicsApplication::shutdown()
 	glfwTerminate();
 }
 
+bool resetPressed = false;
+
 bool PhysicsApplication::update()
 {
+	//Reset scene when button is initially pressed
+	if (glfwGetKey(window, GLFW_KEY_R))
+	{
+		if (!resetPressed)
+			CreateScene();
+
+		resetPressed = true;
+	}
+	else
+		resetPressed = false;
+
 	camera.update(window);
 
 	float dt = 1.0f / 60.0f;
@@ -61,7 +74,18 @@ bool PhysicsApplication::update()
 	//Update physics bodies
 	for (auto it = m_physicsObjects.begin(); it != m_physicsObjects.end(); ++it)
 	{
-		((PhysicsObject*)*it)->Update(dt);
+		PhysicsObject* obj = *it;
+		obj->Update(dt);
+
+		//Check this object with everything further up the list
+		for (auto it2 = it; it2 != m_physicsObjects.end(); ++it2)
+		{
+			if (it != it2)
+			{
+				PhysicsObject* obj2 = *it2;
+				obj2->CheckCollisions(obj);
+			}
+		}
 	}
 
 	//TODO: sleep 1000*dt
@@ -82,7 +106,7 @@ void PhysicsApplication::draw()
 	Gizmos::addTransform(glm::mat4(1));
 	vec4 orange(1, 0.7f, 0.2f, 1.0f);
 	vec4 red(1, 0, 0, 1);
-	vec4 white(1);
+	vec4 white(0.5f, 0.5f, 0.5f, 1.0f);
 	vec4 black(0, 0, 0, 1);
 
 	//Draw grid
@@ -105,4 +129,15 @@ void PhysicsApplication::draw()
 	glfwPollEvents();
 
 	day++;
+}
+
+void PhysicsApplication::CreateScene()
+{
+	//Reset scene
+	m_physicsObjects.clear();
+
+	//Add new physics objects to list
+	m_physicsObjects.push_back(new Plane(glm::vec2(0, -5), glm::vec2(1)));
+	m_physicsObjects.push_back(new Circle(glm::vec2(0), 1.0f, glm::vec2(1, 0), 1.0f));
+	m_physicsObjects.push_back(new Circle(glm::vec2(-1), 1.0f, glm::vec2(-1, 0), 1.0f));
 }

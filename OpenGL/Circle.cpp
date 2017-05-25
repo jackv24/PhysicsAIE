@@ -5,13 +5,17 @@
 
 Circle::Circle()
 {
+	type = CIRCLE;
 }
 
-Circle::Circle(glm::vec2 position, float radius, glm::vec2 velocity)
+Circle::Circle(glm::vec2 position, float radius, glm::vec2 velocity, float mass)
 {
 	m_position = position;
 	m_radius = radius;
 	m_velocity = velocity;
+	m_mass = mass;
+
+	type = CIRCLE;
 }
 
 Circle::~Circle()
@@ -22,3 +26,5 @@ void Circle::Draw()
 {
 	Gizmos::add2DCircle(m_position, m_radius, 16, glm::vec4(1));
 }
+
+float Circle::GetRadius() { return m_radius; }
