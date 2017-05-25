@@ -3,6 +3,7 @@
 #include "RigidBody.h"
 #include "Circle.h"
 #include "Plane.h"
+#include "Box.h"
 
 using namespace glm;
 
@@ -103,18 +104,18 @@ void PhysicsApplication::draw()
 
 	Gizmos::clear();
 
-	Gizmos::addTransform(glm::mat4(1));
-	vec4 orange(1, 0.7f, 0.2f, 1.0f);
-	vec4 red(1, 0, 0, 1);
-	vec4 white(0.5f, 0.5f, 0.5f, 1.0f);
-	vec4 black(0, 0, 0, 1);
+	//Gizmos::addTransform(glm::mat4(1));
+	//vec4 orange(1, 0.7f, 0.2f, 1.0f);
+	//vec4 red(1, 0, 0, 1);
+	//vec4 white(0.5f, 0.5f, 0.5f, 1.0f);
+	//vec4 black(0, 0, 0, 1);
 
-	//Draw grid
-	for (int i = 0; i < 21; ++i)
-	{
-		Gizmos::add2DLine(vec2(-10 + i, 10), vec2(-10 + i, -10), i == 10 ? orange : white);
-		Gizmos::add2DLine(vec2(10, -10 + i), vec2(-10, -10 + i), i == 10 ? orange : white);
-	}
+	////Draw grid
+	//for (int i = 0; i < 21; ++i)
+	//{
+	//	Gizmos::add2DLine(vec2(-10 + i, 10), vec2(-10 + i, -10), i == 10 ? orange : white);
+	//	Gizmos::add2DLine(vec2(10, -10 + i), vec2(-10, -10 + i), i == 10 ? orange : white);
+	//}
 
 	//Draw physics objects
 	for (auto it = m_physicsObjects.begin(); it != m_physicsObjects.end(); ++it)
@@ -137,8 +138,8 @@ void PhysicsApplication::CreateScene()
 	m_physicsObjects.clear();
 
 	//Add new physics objects to list
-	m_physicsObjects.push_back(new Plane(glm::vec2(0, -5), glm::vec2(1 ,1)));
-	m_physicsObjects.push_back(new Plane(glm::vec2(0, -5), glm::vec2(-1, 1)));
+	m_physicsObjects.push_back(new Plane(glm::vec2(0, -5), glm::vec2(0, 1)));
 	m_physicsObjects.push_back(new Circle(glm::vec2(0), 1.0f, glm::vec2(1, 10), 1.0f, 0.5f));
-	m_physicsObjects.push_back(new Circle(glm::vec2(-1), 1.0f, glm::vec2(-1, 0), 1.0f, 0.9f));
+	m_physicsObjects.push_back(new Circle(glm::vec2(-1), 1.0f, glm::vec2(-1, 0), 1.0f, 0.75f));
+	m_physicsObjects.push_back(new Box(glm::vec2(-3, 5), 2.0f, 1.0f, glm::vec2(0), 2.0f, 0.25f));
 }

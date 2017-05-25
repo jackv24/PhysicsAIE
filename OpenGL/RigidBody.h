@@ -16,14 +16,26 @@ public:
 
 	glm::vec2 GetPosition();
 	glm::vec2 GetVelocity();
+	float GetRotation();
+	float GetAngularVelocity();
 	float GetMass();
 	float GetBounciness();
 
 	void ApplyForce(glm::vec2 force);
+	void ApplyForce(glm::vec2 force, glm::vec2 position);
+
+	glm::vec2 localX;
+	glm::vec2 localY;
+
+	float moment = 0.0f;
 
 protected:
 	glm::vec2 m_position;
 	glm::vec2 m_velocity;
+
+	float m_rotation;
+	float m_angularVelocity;
+
 	float m_mass;
 	float m_bounciness = 0.0f;
 };
