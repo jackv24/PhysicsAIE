@@ -24,6 +24,8 @@ public:
 	void ApplyForce(glm::vec2 force);
 	void ApplyForce(glm::vec2 force, glm::vec2 position);
 
+	void ResolveCollision(RigidBody* other, glm::vec2 contact, glm::vec2* direction);
+
 	glm::vec2 localX;
 	glm::vec2 localY;
 

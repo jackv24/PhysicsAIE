@@ -94,3 +94,15 @@ void Physics::BoxPlaneCollision(Box * box, Plane * plane)
 		box->SetPosition(box->GetPosition() - plane->normal * penetration);
 	}
 }
+
+void Physics::CircleCircleCollision(Circle * circle1, Circle * circle2)
+{
+	float d = glm::distance(circle1->GetPosition(), circle2->GetPosition());
+
+	if (d < circle1->GetRadius() + circle2->GetRadius())
+	{
+		glm::vec2 contact = glm::normalize(circle2->GetPosition() - circle1->GetPosition()) * circle1->GetRadius();
+
+		circle1->ResolveCollision(circle2, contact, nullptr);
+	}
+}
