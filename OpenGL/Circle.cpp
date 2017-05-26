@@ -13,7 +13,7 @@ Circle::Circle()
 
 	type = CIRCLE;
 
-	moment = 0.5f * m_mass * m_radius * m_radius * 60;
+	moment = 0.5f * m_mass * m_radius * m_radius;
 }
 
 Circle::Circle(glm::vec2 position, float radius, glm::vec2 velocity, float mass, float bounciness)
@@ -26,7 +26,7 @@ Circle::Circle(glm::vec2 position, float radius, glm::vec2 velocity, float mass,
 
 	type = CIRCLE;
 
-	moment = 0.5f * m_mass * m_radius * m_radius * 60;
+	moment = 0.5f * m_mass * m_radius * m_radius;
 }
 
 Circle::~Circle()
@@ -36,6 +36,7 @@ Circle::~Circle()
 void Circle::Draw()
 {
 	Gizmos::add2DCircle(m_position, m_radius, 16, glm::vec4(1.0f, 0.25f, 0.25f, 1.0f));
+	Gizmos::add2DCircle(m_position + m_radius*0.5f*localX, m_radius*0.2f, 16, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 }
 
 float Circle::GetRadius() { return m_radius; }

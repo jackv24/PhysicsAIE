@@ -15,7 +15,7 @@ Box::Box()
 
 	type = BOX;
 
-	moment = 1.0f / 12.0f * m_mass * width * height * 10;
+	moment = 1.0f / 12.0f * m_mass * width * height;
 }
 
 Box::Box(glm::vec2 position, float w, float h, glm::vec2 velocity, float mass, float bounciness)
@@ -30,7 +30,7 @@ Box::Box(glm::vec2 position, float w, float h, glm::vec2 velocity, float mass, f
 
 	type = BOX;
 
-	moment = 1.0f / 12.0f * m_mass * width * height * 10;
+	moment = 1.0f / 12.0f * m_mass * width * height;
 
 	m_rotation = 25.0f;
 }

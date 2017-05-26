@@ -101,7 +101,7 @@ void Physics::CircleCircleCollision(Circle * circle1, Circle * circle2)
 
 	if (d < circle1->GetRadius() + circle2->GetRadius())
 	{
-		glm::vec2 contact = glm::normalize(circle2->GetPosition() - circle1->GetPosition()) * circle1->GetRadius();
+		glm::vec2 contact = circle1->GetPosition() + glm::normalize(circle2->GetPosition() - circle1->GetPosition()) * circle1->GetRadius();
 
 		circle1->ResolveCollision(circle2, contact, nullptr);
 	}
