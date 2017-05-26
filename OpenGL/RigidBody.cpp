@@ -63,6 +63,8 @@ float RigidBody::GetAngularVelocity() { return m_angularVelocity; }
 float RigidBody::GetMass() { return m_mass; }
 float RigidBody::GetBounciness() { return m_bounciness; }
 
+bool RigidBody::IsFixed() { return m_fixed; }
+
 void RigidBody::ApplyForce(glm::vec2 force)
 {
 	m_velocity += force/m_mass;

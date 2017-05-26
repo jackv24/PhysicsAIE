@@ -141,7 +141,7 @@ void PhysicsApplication::CreateScene()
 	//Add new physics objects to list
 	m_physicsObjects.push_back(new Plane(glm::vec2(0, -5), glm::vec2(0, 1)));
 	m_physicsObjects.push_back(new Box(glm::vec2(-2, 10), 2.0f, 1.0f, glm::vec2(0), 2.0f, 0.1f));
-	m_physicsObjects.push_back(new Box(glm::vec2(-4, 12), 2.0f, 3.0f, glm::vec2(0), 4.0f, 0.25f));
+	m_physicsObjects.push_back(new Box(glm::vec2(-3, 12), 2.0f, 3.0f, glm::vec2(0), 4.0f, 0.25f));
 	m_physicsObjects.push_back(new Circle(glm::vec2(0), 1.0f, glm::vec2(1, 10), 1.0f, 0.25f));
 	m_physicsObjects.push_back(new Circle(glm::vec2(2), 1.0f, glm::vec2(1, 10), 1.0f, 0.25f));
 	m_physicsObjects.push_back(new Circle(glm::vec2(-1), 0.5f, glm::vec2(-1, 0), 0.5f, 0.5f));

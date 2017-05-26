@@ -107,7 +107,7 @@ void Physics::CircleCircleCollision(Circle * circle1, Circle * circle2)
 	}
 }
 
-void Physics::CircleBoxCollision(Circle * circle, Box * box)
+void Physics::BoxCircleCollision(Box * box, Circle * circle)
 {
 	glm::vec2 circlePos = circle->GetPosition() - box->GetPosition();
 	float w2 = box->width / 2;
@@ -181,4 +181,37 @@ void Physics::CircleBoxCollision(Circle * circle, Box * box)
 	}
 
 	delete direction;
+}
+
+void Physics::BoxBoxCollision(Box * box1, Box * box2)
+{
+	glm::vec2 boxPos = box2->GetPosition() - box1->GetPosition();
+
+	glm::vec2 norm;
+	glm::vec2 contact;
+	float pen = 0;
+	int numContacts = 0;
+
+	box1->CheckBoxCorners(box2, contact, numContacts, pen, norm);
+
+	if (box2->CheckBoxCorners(box1, contact, numContacts, pen, norm))
+		norm = -norm;
+
+	if (pen > 0)
+	{
+		box1->ResolveCollision(box2, contact / float(numContacts), &norm);
+
+		float numDynamic = (box1->IsFixed() ? 0 : 1) + (box2->IsFixed() ? 0 : 1);
+
+		if (numDynamic > 0)
+		{
+			glm::vec2 contactForce = norm * pen / numDynamic;
+
+			if (!box1->IsFixed())
+				box1->SetPosition(box1->GetPosition() - contactForce);
+			
+			if (!box2->IsFixed())
+				box2->SetPosition(box2->GetPosition() + contactForce);
+		}
+	}
 }

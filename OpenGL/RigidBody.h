@@ -20,6 +20,7 @@ public:
 	float GetAngularVelocity();
 	float GetMass();
 	float GetBounciness();
+	bool IsFixed();
 
 	void ApplyForce(glm::vec2 force);
 	void ApplyForce(glm::vec2 force, glm::vec2 position);
@@ -40,5 +41,7 @@ protected:
 
 	float m_mass;
 	float m_bounciness = 0.0f;
+
+	bool m_fixed = false;
 };
 

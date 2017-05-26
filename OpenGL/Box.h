@@ -11,6 +11,8 @@ public:
 
 	virtual void Draw();
 
+	bool CheckBoxCorners(Box* box, glm::vec2& contact, int& numContacts, float &pen, glm::vec2& edgeNormal);
+
 	float width;
 	float height;
 };
