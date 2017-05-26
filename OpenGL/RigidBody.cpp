@@ -88,8 +88,8 @@ void RigidBody::ResolveCollision(RigidBody* other, glm::vec2 contact, glm::vec2*
 	//Determine the total velocity of the contact points, both linear and rotational
 	float r1 = glm::dot(contact - m_position, -unitParallel);
 	float r2 = glm::dot(contact - other->GetPosition(), unitParallel);
-	float v1 = glm::dot(m_velocity, unitDisp) + r1 * m_angularVelocity;
-	float v2 = glm::dot(other->GetVelocity(), unitDisp) + r2*other->GetAngularVelocity();
+	float v1 = glm::dot(m_velocity, unitDisp) - r1 * m_angularVelocity;
+	float v2 = glm::dot(other->GetVelocity(), unitDisp) - r2*other->GetAngularVelocity();
 
 	//If they're moving closer
 	if (v1 > v2)

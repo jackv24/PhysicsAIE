@@ -13,4 +13,7 @@ public:
 
 	float angle = 0;
 	float radius = 1;
+
+private:
+	vec2 pos = vec2(0);
 };

@@ -3,15 +3,22 @@
 
 void Camera::update(GLFWwindow* window)
 {
-	if (glfwGetKey(window, GLFW_KEY_A)) angle = angle - 0.1f;
-	if (glfwGetKey(window, GLFW_KEY_D)) angle = angle + 0.1f;
-	if (glfwGetKey(window, GLFW_KEY_W)) radius = radius - 0.01f;
-	if (glfwGetKey(window, GLFW_KEY_S)) radius = radius + 0.01f;
+	float multiplier = 1.0f;
+
+	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT)) multiplier = 10.0f;
+
+	if (glfwGetKey(window, GLFW_KEY_Q)) radius = radius - 0.05f * multiplier;
+	if (glfwGetKey(window, GLFW_KEY_E)) radius = radius + 0.05f * multiplier;
+
+	if (glfwGetKey(window, GLFW_KEY_W)) pos.y += 0.5f * multiplier;
+	if (glfwGetKey(window, GLFW_KEY_S)) pos.y -= 0.5f * multiplier;
+	if (glfwGetKey(window, GLFW_KEY_A)) pos.x -= 0.5f * multiplier;
+	if (glfwGetKey(window, GLFW_KEY_D)) pos.x += 0.5f * multiplier;
 }
 
 mat4 Camera::getView()
 {
-	return glm::lookAt(vec3(0, 0, 10*radius), vec3(0, 0, 0), vec3(0, 1, 0));
+	return glm::lookAt(vec3(pos.x, pos.y, 10*radius), vec3(pos.x, pos.y, 0), vec3(0, 1, 0));
 }
 
 mat4 Camera::getProjection()
