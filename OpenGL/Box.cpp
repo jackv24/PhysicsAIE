@@ -50,87 +50,59 @@ void Box::Draw()
 	Gizmos::add2DTri(p1, p4, p3, glm::vec4(0.25f, 1.0f, 0.75f, 1.0f));
 }
 
-bool Box::CheckBoxCorners(Box * box, glm::vec2 & contact, int & numContacts, float & pen, glm::vec2 & edgeNormal)
+void Box::CheckBoxCorners(Box * box, glm::vec2 & contact, int & numContacts, float & pen, glm::vec2 & edgeNormal, glm::vec2& contactForce)
 {
-	float minX, maxX, minY, maxY;
-	float w2 = width / 2, h2 = height / 2;
-	int numLocalContacts = 0;
-
-	glm::vec2 localContact;
-
-	bool first = true;
-
+	float penetration = 0;
 	for (float x = -box->width / 2; x < box->width; x += box->width)
 	{
 		for (float y = -box->height / 2; y < box->height; y += box->height)
 		{
-			//Position in worldspace
-			glm::vec2 p = box->GetPosition() + x * box->localX + y * box->localY;
-
-			//Position in this box's space
+			glm::vec2 p = box->GetPosition() + x*box->localX + y*box->localY; // pos in worldspace
 			glm::vec2 p0(glm::dot(p - m_position, localX), glm::dot(p - m_position, localY));
-
-			if (first || p0.x < minX) minX = p0.x;
-			if (first || p0.x > maxX) maxX = p0.x;
-			if (first || p0.y < minY) minY = p0.y;
-			if (first || p0.y > maxY) maxY = p0.y;
-
-			if (p0.x >= -w2 && p0.x <= w2 && p0.y >= -h2 && p0.y <= h2)
+			float w2 = width / 2, h2 = height / 2;
+			if (p0.y < h2 && p0.y > -h2)
 			{
-				numLocalContacts++;
-				localContact += p0;
+				if (p0.x > 0 && p0.x < w2)
+				{
+					numContacts++;
+					contact += m_position + w2 * localX + p0.y * localY;
+					edgeNormal = localX;
+					penetration = w2 - p0.x;
+				}
+				if (p0.x < 0 && p0.x > -w2)
+				{
+					numContacts++;
+					contact += m_position - w2 * localX + p0.y * localY;
+					edgeNormal = -localX;
+					penetration = w2 + p0.x;
+				}
 			}
-
-			first = false;
+			if (p0.x < w2 && p0.x > -w2)
+			{
+				if (p0.y > 0 && p0.y < h2)
+				{
+					numContacts++;
+					contact += m_position + p0.x * localX + h2 * localY;
+					float pen0 = h2 - p0.y;
+					if (pen0 < penetration || penetration == 0)
+					{
+						penetration = pen0;
+						edgeNormal = localY;
+					}
+				}
+				if (p0.y < 0 && p0.y > -h2)
+				{
+					numContacts++;
+					contact += m_position + p0.x * localX - h2 * localY;
+					float pen0 = h2 + p0.y;
+					if (pen0 < penetration || penetration == 0)
+					{
+						penetration = pen0;
+						edgeNormal = -localY;
+					}
+				}
+			}
 		}
 	}
-
-	if (maxX < -w2 || minX > w2 || maxY < -h2 || minY > h2)
-		return false;
-
-	if (numLocalContacts == 0)
-		return false;
-
-	bool res = false;
-
-	contact += m_position + (localContact.x * localX + localContact.y * localY) / (float)numLocalContacts;
-	numContacts++;
-
-	float pen0 = w2 - minX;
-
-	if (pen0 > 0 && (pen0 < pen || pen == 0))
-	{
-		edgeNormal = localX;
-		pen = pen0;
-		res = true;
-	}
-
-	pen0 = maxX + w2;
-
-	if (pen0 > 0 && (pen0 < pen || pen == 0))
-	{
-		edgeNormal = -localX;
-		pen = pen0;
-		res = true;
-	}
-
-	pen0 = h2 - minY;
-
-	if (pen0 > 0 && (pen0 < pen || pen == 0))
-	{
-		edgeNormal = localY;
-		pen = pen0;
-		res = true;
-	}
-
-	pen0 = maxY + h2;
-
-	if (pen0 > 0 && (pen0 < pen || pen == 0))
-	{
-		edgeNormal = -localY;
-		pen = pen0;
-		res = true;
-	}
-
-	return res;
+	contactForce = penetration*edgeNormal;
 }

@@ -18,8 +18,9 @@ void Physics::CirclePlaneCollision(Circle * circle, Plane * plane)
 	//Collision test
 	if ((d > 0 && d < radius && v < 0) || (d < 0 && d > -radius && v > 0))
 	{
-		glm::vec2 force = -circle->GetMass() * (v*plane->normal) * (1 + circle->GetBounciness());
+		circle->SetPosition(circle->GetPosition() - plane->normal * (d - radius));
 
+		glm::vec2 force = -circle->GetMass() * (v*plane->normal) * (1 + circle->GetBounciness());
 		circle->ApplyForce(force);
 	}
 }
@@ -58,17 +59,18 @@ void Physics::BoxPlaneCollision(Box * box, Plane * plane)
 
 				if (comeFromPlane >= 0)
 				{
-					if (penetration > distFromPlane)
-						penetration = distFromPlane;
+					penetration = std::fminf(penetration, distFromPlane);
 				}
 				else
 				{
-					if (penetration < distFromPlane)
-						penetration = distFromPlane;
+					penetration = fmaxf(penetration, distFromPlane);
 				}
 			}
+
 		}
 	}
+
+	box->SetPosition(box->GetPosition() - penetration * plane->normal);
 
 	//If a corner has hit (typically only two can contact)
 	if (numContacts > 0)
@@ -90,17 +92,21 @@ void Physics::BoxPlaneCollision(Box * box, Plane * plane)
 		float mass = 1.0f / (1.0f / box->GetMass() + (r * r) / box->moment);
 
 		box->ApplyForce(acceleration*mass, localContact);
-
-		box->SetPosition(box->GetPosition() - plane->normal * penetration);
 	}
 }
 
 void Physics::CircleCircleCollision(Circle * circle1, Circle * circle2)
 {
-	float d = glm::distance(circle1->GetPosition(), circle2->GetPosition());
+	glm::vec2 disp = circle2->GetPosition() - circle1->GetPosition();
 
-	if (d < circle1->GetRadius() + circle2->GetRadius())
+	float d = sqrtf(disp.x * disp.x + disp.y * disp.y);
+
+	if (d > 0 && d < circle1->GetRadius() + circle2->GetRadius())
 	{
+		glm::vec2 contactForce = 0.5f * (d - (circle1->GetRadius() + circle2->GetRadius())) * disp / d;
+		circle1->SetPosition(circle1->GetPosition() + contactForce);
+		circle2->SetPosition(circle2->GetPosition() - contactForce);
+
 		glm::vec2 contact = circle1->GetPosition() + glm::normalize(circle2->GetPosition() - circle1->GetPosition()) * circle1->GetRadius();
 
 		circle1->ResolveCollision(circle2, contact, nullptr);
@@ -187,25 +193,32 @@ void Physics::BoxBoxCollision(Box * box1, Box * box2)
 {
 	glm::vec2 boxPos = box2->GetPosition() - box1->GetPosition();
 
-	glm::vec2 norm;
+	glm::vec2 n1, n2;
 	glm::vec2 contact;
 	float pen = 0;
 	int numContacts = 0;
 
-	box1->CheckBoxCorners(box2, contact, numContacts, pen, norm);
+	glm::vec2 cf1, cf2;
 
-	if (box2->CheckBoxCorners(box1, contact, numContacts, pen, norm))
-		norm = -norm;
+	box1->CheckBoxCorners(box2, contact, numContacts, pen, n1, cf1);
+	box2->CheckBoxCorners(box1, contact, numContacts, pen, n2, cf2);
+
+	//Subtract because they're facing different directions
+	glm::vec2 edgeNormal = glm::normalize(n1 - n2);
+
+	glm::vec2 contactForce = 0.5f * (cf1 - cf2);
+	box1->SetPosition(box1->GetPosition() - contactForce);
+	box2->SetPosition(box2->GetPosition() + contactForce);
 
 	if (pen > 0)
 	{
-		box1->ResolveCollision(box2, contact / float(numContacts), &norm);
+		box1->ResolveCollision(box2, contact / float(numContacts), &edgeNormal);
 
 		float numDynamic = (box1->IsFixed() ? 0 : 1) + (box2->IsFixed() ? 0 : 1);
 
 		if (numDynamic > 0)
 		{
-			glm::vec2 contactForce = norm * pen / numDynamic;
+			glm::vec2 contactForce = edgeNormal * pen / numDynamic;
 
 			if (!box1->IsFixed())
 				box1->SetPosition(box1->GetPosition() - contactForce);
