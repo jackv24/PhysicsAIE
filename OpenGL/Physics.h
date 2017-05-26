@@ -11,5 +11,6 @@ public:
 	static void BoxPlaneCollision(Box* box, Plane* plane);
 
 	static void CircleCircleCollision(Circle* circle1, Circle* circle2);
+	static void CircleBoxCollision(Circle* circle, Box* box);
 };
 

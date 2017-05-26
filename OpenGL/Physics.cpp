@@ -106,3 +106,79 @@ void Physics::CircleCircleCollision(Circle * circle1, Circle * circle2)
 		circle1->ResolveCollision(circle2, contact, nullptr);
 	}
 }
+
+void Physics::CircleBoxCollision(Circle * circle, Box * box)
+{
+	glm::vec2 circlePos = circle->GetPosition() - box->GetPosition();
+	float w2 = box->width / 2;
+	float h2 = box->height / 2;
+
+	int numContacts = 0;
+
+	//Contact is in box space
+	glm::vec2 contact(0, 0);
+
+	//Check corners
+	for (float x = w2; x < box->width; x += box->width)
+	{
+		for (float y = -h2; y < box->height; y += box->height)
+		{
+			glm::vec2 p = x * box->localX + y * box->localY;
+			glm::vec2 dp = p - circlePos;
+
+			if (dp.x * dp.x + dp.y * dp.y < circle->GetRadius() * circle->GetRadius())
+			{
+				numContacts++;
+				contact += glm::vec2(x, y);
+			}
+		}
+	}
+
+	//Check edges
+	glm::vec2* direction = NULL;
+
+	//Get the local position of the circle centre
+	glm::vec2 localPos(glm::dot(box->localX, circlePos), glm::dot(box->localY, circlePos));
+
+	if (localPos.y < h2 && localPos.y > -h2)
+	{
+		if (localPos.x > 0 && localPos.x < w2 + circle->GetRadius())
+		{
+			numContacts++;
+			contact += glm::vec2(w2, localPos.y);
+			direction = new glm::vec2(box->localX);
+		}
+
+		if (localPos.x < 0 && localPos.x > -(w2 + circle->GetRadius()))
+		{
+			numContacts++;
+			contact += glm::vec2(-w2, localPos.y);
+			direction = new glm::vec2(-box->localX);
+		}
+	}
+
+	if (localPos.x < w2 && localPos.x > -w2)
+	{
+		if (localPos.y > 0 && localPos.y < h2 + circle->GetRadius())
+		{
+			numContacts++;
+			contact += glm::vec2(localPos.x, h2);
+			direction = new glm::vec2(box->localY);
+		}
+		if (localPos.y < 0 && localPos.y > -(h2 + circle->GetRadius()))
+		{
+			numContacts++;
+			contact += glm::vec2(localPos.x, -h2);
+			direction = new glm::vec2(-box->localY);
+		}
+	}
+
+	if (numContacts > 0)
+	{
+		//Average, and convert back into world coords
+		contact = box->GetPosition() + (1.0f / numContacts) * (box->localX*contact.x + box->localY*contact.y);
+		box->ResolveCollision(circle, contact, direction);
+	}
+
+	delete direction;
+}

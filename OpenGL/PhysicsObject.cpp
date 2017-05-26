@@ -24,4 +24,9 @@ void PhysicsObject::CheckCollisions(PhysicsObject * other)
 
 	else if (type == CIRCLE && other->type == CIRCLE)
 		Physics::CircleCircleCollision((Circle*)this, (Circle*)other);
+
+	else if (type == CIRCLE && other->type == BOX)
+		Physics::CircleBoxCollision((Circle*)this, (Box*)other);
+	else if (type == BOX && other->type == CIRCLE)
+		Physics::CircleBoxCollision((Circle*)other, (Box*)this);
 }
