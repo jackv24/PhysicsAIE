@@ -65,6 +65,11 @@ float RigidBody::GetBounciness() { return m_bounciness; }
 
 bool RigidBody::IsFixed() { return m_fixed; }
 
+glm::vec2 RigidBody::ToWorld(glm::vec2 position)
+{
+	return m_position + position;
+}
+
 void RigidBody::ApplyForce(glm::vec2 force)
 {
 	m_velocity += force/m_mass;

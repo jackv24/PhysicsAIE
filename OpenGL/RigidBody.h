@@ -22,6 +22,8 @@ public:
 	float GetBounciness();
 	bool IsFixed();
 
+	glm::vec2 ToWorld(glm::vec2 position);
+
 	void ApplyForce(glm::vec2 force);
 	void ApplyForce(glm::vec2 force, glm::vec2 position);
 

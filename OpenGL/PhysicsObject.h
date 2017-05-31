@@ -15,6 +15,7 @@ public:
 
 	enum Type
 	{
+		NONE,
 		CIRCLE,
 		PLANE,
 		BOX,

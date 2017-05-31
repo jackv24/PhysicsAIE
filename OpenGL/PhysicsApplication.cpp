@@ -4,6 +4,7 @@
 #include "Circle.h"
 #include "Plane.h"
 #include "Box.h"
+#include "Spring.h"
 
 using namespace glm;
 
@@ -150,4 +151,11 @@ void PhysicsApplication::CreateScene()
 	m_physicsObjects.push_back(new Circle(glm::vec2(-1), 0.5f, glm::vec2(-1, 0), 0.5f, 0.5f));
 	m_physicsObjects.push_back(new Circle(glm::vec2(3), 0.5f, glm::vec2(1, 0), 0.5f, 0.75f));
 	m_physicsObjects.push_back(new Circle(glm::vec2(0, 3), 0.5f, glm::vec2(1, 6), 0.5f, 0.75f));
+
+	Circle* c1 = new Circle(glm::vec2(5, 5), 1.0f, glm::vec2(0), 1.0f, 0.75f);
+	m_physicsObjects.push_back(c1);
+	Circle* c2 = new Circle(glm::vec2(-5, 5), 1.0f, glm::vec2(0), 1.0f, 0.75f);
+	m_physicsObjects.push_back(c2);
+
+	m_physicsObjects.push_back(new Spring(c1, c2, 30.0f, 2.0f));
 }
