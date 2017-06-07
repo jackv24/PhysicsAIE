@@ -144,17 +144,18 @@ void PhysicsApplication::CreateScene()
 	m_physicsObjects.push_back(new Plane(glm::vec2(0, 35), glm::vec2(0, -1)));
 	m_physicsObjects.push_back(new Plane(glm::vec2(-20, 0), glm::vec2(1, 0)));
 	m_physicsObjects.push_back(new Plane(glm::vec2(20, 0), glm::vec2(-1, 0)));
-	m_physicsObjects.push_back(new Box(glm::vec2(-2, 10), 2.0f, 1.0f, glm::vec2(0), 2.0f, 0.1f));
-	m_physicsObjects.push_back(new Box(glm::vec2(2, 12), 2.0f, 3.0f, glm::vec2(0), 4.0f, 0.25f));
-	m_physicsObjects.push_back(new Circle(glm::vec2(0), 1.0f, glm::vec2(1, 10), 1.0f, 0.25f));
-	m_physicsObjects.push_back(new Circle(glm::vec2(2), 1.0f, glm::vec2(1, 10), 1.0f, 0.25f));
-	m_physicsObjects.push_back(new Circle(glm::vec2(-1), 0.5f, glm::vec2(-1, 0), 0.5f, 0.5f));
-	m_physicsObjects.push_back(new Circle(glm::vec2(3), 0.5f, glm::vec2(1, 0), 0.5f, 0.75f));
-	m_physicsObjects.push_back(new Circle(glm::vec2(0, 3), 0.5f, glm::vec2(1, 6), 0.5f, 0.75f));
+	m_physicsObjects.push_back(new Box(glm::vec2(0, 10), 2.0f, 1.0f, glm::vec2(0), 2.0f, 0.1f, true));
+	m_physicsObjects.push_back(new Box(glm::vec2(2, 12), 2.0f, 3.0f, glm::vec2(0), 4.0f, 0.25f, true));
+	m_physicsObjects.push_back(new Box(glm::vec2(5, 15), 2.0f, 3.0f, glm::vec2(0), 4.0f, 0.25f, true));
+	m_physicsObjects.push_back(new Circle(glm::vec2(0), 1.0f, glm::vec2(1, 10), 1.0f, 0.25f, false));
+	m_physicsObjects.push_back(new Circle(glm::vec2(2), 1.0f, glm::vec2(1, 10), 1.0f, 0.25f, false));
+	m_physicsObjects.push_back(new Circle(glm::vec2(-1), 0.5f, glm::vec2(-1, 0), 0.5f, 0.5f, false));
+	m_physicsObjects.push_back(new Circle(glm::vec2(3), 0.5f, glm::vec2(1, 0), 0.5f, 0.75f, false));
+	m_physicsObjects.push_back(new Circle(glm::vec2(0, 3), 0.5f, glm::vec2(1, 6), 0.5f, 0.75f, false));
 
-	Circle* c1 = new Circle(glm::vec2(5, 5), 1.0f, glm::vec2(0), 1.0f, 0.75f);
+	Circle* c1 = new Circle(glm::vec2(5, 5), 1.0f, glm::vec2(0), 1.0f, 0.75f, true);
 	m_physicsObjects.push_back(c1);
-	Circle* c2 = new Circle(glm::vec2(-5, 5), 1.0f, glm::vec2(0), 1.0f, 0.75f);
+	Circle* c2 = new Circle(glm::vec2(-5, 5), 1.0f, glm::vec2(0), 1.0f, 0.75f, true);
 	m_physicsObjects.push_back(c2);
 
 	m_physicsObjects.push_back(new Spring(c1, c2, 30.0f, 2.0f));

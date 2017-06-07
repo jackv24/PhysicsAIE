@@ -6,7 +6,7 @@ class Circle : public RigidBody
 {
 public:
 	Circle();
-	Circle(glm::vec2 position, float radius, glm::vec2 velocity, float mass, float bounciness);
+	Circle(glm::vec2 position, float radius, glm::vec2 velocity, float mass, float bounciness, bool awake);
 	~Circle();
 
 	virtual void Draw();

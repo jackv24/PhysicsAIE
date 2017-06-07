@@ -17,12 +17,13 @@ RigidBody::RigidBody()
 	localY = glm::vec2(0, 1);
 }
 
-RigidBody::RigidBody(glm::vec2 position, glm::vec2 velocity, float mass, float bounciness)
+RigidBody::RigidBody(glm::vec2 position, glm::vec2 velocity, float mass, float bounciness, bool awake)
 {
 	m_position = position;
 	m_velocity = velocity;
 	m_mass = mass;
 	m_bounciness = bounciness;
+	m_awake = awake;
 
 	m_rotation = 0;
 	m_angularVelocity = 0;
@@ -37,14 +38,22 @@ RigidBody::~RigidBody()
 
 void RigidBody::Update(float deltaTime)
 {
-	//Apply velocity to position
-	m_position += m_velocity * deltaTime;
+	if (m_awake)
+	{
+		//Apply velocity to position
+		m_position += m_velocity * deltaTime;
 
-	//Apply gravity to velocity over time
-	m_velocity += gravity * deltaTime;
+		//Apply gravity to velocity over time
+		m_velocity += gravity * deltaTime;
 
-	//Rotation and angular velocity
-	m_rotation += m_angularVelocity * deltaTime;
+		//Rotation and angular velocity
+		m_rotation += m_angularVelocity * deltaTime;
+	}
+	else
+	{
+		m_velocity = glm::vec2(0);
+		m_angularVelocity = 0;
+	}
 
 	//Store local axes
 	float cs = cosf(m_rotation);
@@ -84,6 +93,12 @@ void RigidBody::ApplyForce(glm::vec2 force, glm::vec2 position)
 
 void RigidBody::ResolveCollision(RigidBody* other, glm::vec2 contact, glm::vec2* direction)
 {
+	if (m_awake || other->m_awake)
+	{
+		m_awake = true;
+		other->m_awake = true;
+	}
+
 	//Find the vector between their centres, or use the provided direction of force
 	glm::vec2 unitDisp = direction ? *direction : glm::normalize(other->GetPosition() - m_position);
 
@@ -94,7 +109,7 @@ void RigidBody::ResolveCollision(RigidBody* other, glm::vec2 contact, glm::vec2*
 	float r1 = glm::dot(contact - m_position, -unitParallel);
 	float r2 = glm::dot(contact - other->GetPosition(), unitParallel);
 	float v1 = glm::dot(m_velocity, unitDisp) - r1 * m_angularVelocity;
-	float v2 = glm::dot(other->GetVelocity(), unitDisp) - r2*other->GetAngularVelocity();
+	float v2 = glm::dot(other->GetVelocity(), unitDisp) + r2*other->GetAngularVelocity();
 
 	//If they're moving closer
 	if (v1 > v2)

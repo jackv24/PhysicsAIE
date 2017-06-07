@@ -16,13 +16,14 @@ Circle::Circle()
 	moment = 0.5f * m_mass * m_radius * m_radius;
 }
 
-Circle::Circle(glm::vec2 position, float radius, glm::vec2 velocity, float mass, float bounciness)
+Circle::Circle(glm::vec2 position, float radius, glm::vec2 velocity, float mass, float bounciness, bool awake)
 {
 	m_position = position;
 	m_radius = radius;
 	m_velocity = velocity;
 	m_mass = mass;
 	m_bounciness = bounciness;
+	m_awake = awake;
 
 	type = CIRCLE;
 

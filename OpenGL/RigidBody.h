@@ -6,7 +6,7 @@ class RigidBody : public PhysicsObject
 {
 public:
 	RigidBody();
-	RigidBody(glm::vec2 position, glm::vec2 velocity, float mass, float bounciness);
+	RigidBody(glm::vec2 position, glm::vec2 velocity, float mass, float bounciness, bool awake);
 	~RigidBody();
 
 	virtual void Update(float deltaTime);
@@ -45,5 +45,6 @@ protected:
 	float m_bounciness = 0.0f;
 
 	bool m_fixed = false;
+	bool m_awake;
 };
 
