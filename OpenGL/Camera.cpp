@@ -10,10 +10,10 @@ void Camera::update(GLFWwindow* window)
 	if (glfwGetKey(window, GLFW_KEY_Q)) radius = radius - 0.05f * multiplier;
 	if (glfwGetKey(window, GLFW_KEY_E)) radius = radius + 0.05f * multiplier;
 
-	if (glfwGetKey(window, GLFW_KEY_W)) pos.y += 0.5f * multiplier;
+	/*if (glfwGetKey(window, GLFW_KEY_W)) pos.y += 0.5f * multiplier;
 	if (glfwGetKey(window, GLFW_KEY_S)) pos.y -= 0.5f * multiplier;
 	if (glfwGetKey(window, GLFW_KEY_A)) pos.x -= 0.5f * multiplier;
-	if (glfwGetKey(window, GLFW_KEY_D)) pos.x += 0.5f * multiplier;
+	if (glfwGetKey(window, GLFW_KEY_D)) pos.x += 0.5f * multiplier;*/
 }
 
 mat4 Camera::getView()

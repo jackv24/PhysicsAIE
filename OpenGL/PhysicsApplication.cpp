@@ -8,6 +8,8 @@
 
 using namespace glm;
 
+Circle* lastCircle = nullptr;
+
 bool PhysicsApplication::startup()
 {
 	glfwInit();
@@ -90,6 +92,37 @@ bool PhysicsApplication::update()
 		}
 	}
 
+	bool mouseDown = glfwGetMouseButton(window, 0);
+
+	double x0, y0;
+	glfwGetCursorPos(window, &x0, &y0);
+
+	mat4 view = camera.getView();
+	mat4 projection = camera.getProjection();
+
+	glm::vec3 windowCoords = glm::vec3(x0, y0, 0);
+	glm::vec4 viewport = glm::vec4(0, 0, 1280, 720);
+	glm::vec3 worldCoords = glm::unProject(windowCoords, view, projection, viewport);
+
+	glm::vec2 m_mousePoint = vec2(worldCoords[0] * camera.getDistance(), worldCoords[1] * (-camera.getDistance()));
+
+	if (mouseDown != m_mouseDown)
+	{
+		if (mouseDown)
+		{
+			Circle* circle = new Circle(m_mousePoint, 1.0f, glm::vec2(0), 1.0f, 0.25f, true);
+			m_physicsObjects.push_back(circle);
+
+			if (lastCircle != nullptr)
+			{
+				m_physicsObjects.push_back(new Spring(circle, lastCircle, 5.0f, 2.0f));
+			}
+
+			lastCircle = circle;
+		}
+		m_mouseDown = mouseDown;
+	}
+
 	//TODO: sleep 1000*dt
 	Sleep(1000 * dt);
 
@@ -139,24 +172,21 @@ void PhysicsApplication::CreateScene()
 	//Reset scene
 	m_physicsObjects.clear();
 
+	lastCircle = nullptr;
+
 	//Add new physics objects to list
 	m_physicsObjects.push_back(new Plane(glm::vec2(0, -5), glm::vec2(0, 1)));
 	m_physicsObjects.push_back(new Plane(glm::vec2(0, 35), glm::vec2(0, -1)));
 	m_physicsObjects.push_back(new Plane(glm::vec2(-20, 0), glm::vec2(1, 0)));
 	m_physicsObjects.push_back(new Plane(glm::vec2(20, 0), glm::vec2(-1, 0)));
-	m_physicsObjects.push_back(new Box(glm::vec2(0, 10), 2.0f, 1.0f, glm::vec2(0), 2.0f, 0.1f, true));
-	m_physicsObjects.push_back(new Box(glm::vec2(2, 12), 2.0f, 3.0f, glm::vec2(0), 4.0f, 0.25f, true));
-	m_physicsObjects.push_back(new Box(glm::vec2(5, 15), 2.0f, 3.0f, glm::vec2(0), 4.0f, 0.25f, true));
-	m_physicsObjects.push_back(new Circle(glm::vec2(0), 1.0f, glm::vec2(1, 10), 1.0f, 0.25f, false));
-	m_physicsObjects.push_back(new Circle(glm::vec2(2), 1.0f, glm::vec2(1, 10), 1.0f, 0.25f, false));
-	m_physicsObjects.push_back(new Circle(glm::vec2(-1), 0.5f, glm::vec2(-1, 0), 0.5f, 0.5f, false));
-	m_physicsObjects.push_back(new Circle(glm::vec2(3), 0.5f, glm::vec2(1, 0), 0.5f, 0.75f, false));
-	m_physicsObjects.push_back(new Circle(glm::vec2(0, 3), 0.5f, glm::vec2(1, 6), 0.5f, 0.75f, false));
 
-	Circle* c1 = new Circle(glm::vec2(5, 5), 1.0f, glm::vec2(0), 1.0f, 0.75f, true);
-	m_physicsObjects.push_back(c1);
-	Circle* c2 = new Circle(glm::vec2(-5, 5), 1.0f, glm::vec2(0), 1.0f, 0.75f, true);
-	m_physicsObjects.push_back(c2);
+	int x = 8, y = 5;
 
-	m_physicsObjects.push_back(new Spring(c1, c2, 30.0f, 2.0f));
+	for (int i = 0; i < x; i++)
+	{
+		for (int j = 0; j < y; j++)
+		{
+			m_physicsObjects.push_back(new Box(glm::vec2(i * 3 - 10 + (j % 2 == 0 ? 1 : 0), j * 2 + 3), 2.0f, 1.0f, glm::vec2(0), 2.0f, 0.1f, false));
+		}
+	}
 }

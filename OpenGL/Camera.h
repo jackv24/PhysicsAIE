@@ -11,6 +11,8 @@ public:
 
 	void update(GLFWwindow* window);
 
+	float getDistance() { return 10 * radius; }
+
 	float angle = 0;
 	float radius = 1;
 

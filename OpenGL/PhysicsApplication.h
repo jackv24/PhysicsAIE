@@ -31,4 +31,6 @@ public:
 
 private:
 	std::list<PhysicsObject*> m_physicsObjects;
+
+	bool m_mouseDown = false;
 };

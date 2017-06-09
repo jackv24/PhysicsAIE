@@ -32,8 +32,6 @@ Box::Box(glm::vec2 position, float w, float h, glm::vec2 velocity, float mass, f
 	type = BOX;
 
 	moment = 1.0f / 12.0f * m_mass * width * height;
-
-	m_rotation = 25.0f;
 }
 
 Box::~Box()
@@ -47,13 +45,13 @@ void Box::Draw()
 	glm::vec2 p3 = m_position - localX * width / 2.0f + localY * height / 2.0f;
 	glm::vec2 p4 = m_position + localX * width / 2.0f + localY * height / 2.0f;
 
-	Gizmos::add2DTri(p1, p2, p4, glm::vec4(0.25f, 1.0f, 0.75f, 1.0f));
-	Gizmos::add2DTri(p1, p4, p3, glm::vec4(0.25f, 1.0f, 0.75f, 1.0f));
+	Gizmos::add2DTri(p1, p2, p4, m_awake ? glm::vec4(0.25f, 1.0f, 0.75f, 1.0f) : glm::vec4(1, 0, 0, 1));
+	Gizmos::add2DTri(p1, p4, p3, m_awake ? glm::vec4(0.25f, 1.0f, 0.75f, 1.0f) : glm::vec4(1, 0, 0, 1));
 }
 
 void Box::CheckBoxCorners(Box * box, glm::vec2 & contact, int & numContacts, float & pen, glm::vec2 & edgeNormal, glm::vec2& contactForce)
 {
-	float penetration = 0;
+	float& penetration = pen;
 	for (float x = -box->width / 2; x < box->width; x += box->width)
 	{
 		for (float y = -box->height / 2; y < box->height; y += box->height)
